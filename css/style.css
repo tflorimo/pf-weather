@@ -18,7 +18,7 @@ body{
 .container {
     height: 400px;
     background-color: #232931;
-    color: #fff;
+    color: #EBFAFD;
     border-radius: 25px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
 }
@@ -59,6 +59,7 @@ body{
     display: flex;
     flex-direction: column;
     margin-top: 25px;
+    gap: 3px;
 }
 
 .today-weather {
@@ -100,8 +101,13 @@ body{
     font-weight: 700;
 }
 
+.day-info div .title:hover + .value{
+    transform: scale(1.1);
+}
+
 .day-info div .value{
     float: right;
+    transition: all 0.3s ease;
 }
 
 .days-list{
@@ -121,6 +127,7 @@ body{
     align-items: center;
     border-radius: 10px;
     transition: all 0.3s ease;
+    color: #EBFAFD
 }
 
 .days-list li .bx{
@@ -130,8 +137,8 @@ body{
 
 .days-list li:hover{
     transform: scale(1.1);
-    background: #fff;
-    color: #222831;
+    background: #90e0ef;
+    color: #03045e;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
 }
 
@@ -151,13 +158,13 @@ body{
     font-weight: 700;
     border-radius: 25px;
     padding: 10px;
-    background: #303f9f;
-    color: #fff;
+    background: #0077b6;
+    color: #EBFAFD;
     cursor: pointer;
     box-shadow: 0 5 15px rgba(0, 0, 0, 0.35);
     transition: all 0.3s ease;
 }
 
 .loc-button:hover{
-    background: #121a4d;
+    background: #03045e;
 }
