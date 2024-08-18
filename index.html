@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Application</title>
+    <link 
+        href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' 
+        rel='stylesheet'
+    />
+    <link 
+        rel="stylesheet"    
+        href="css/style.css"
+    />
+</head>
+<body>
+    <div class="container">
+        <div class="left-info">
+            <div class="pic-gradient"></div>
+            <div class="today-info">
+                <h2>Sabado</h2>
+                <span>17 de agosto de 2023</span>
+                <div>
+                    <i class='bx bx-current-location'></i>
+                    <span>Buenos Aires</span>
+                </div>
+            </div>
+            <div class="today-weather">
+                <i class='bx bxs-sun' ></i>
+                <h1 class="weather-temp">
+                    10°C
+                </h1>
+                <h3>Nublado</h3>
+            </div>
+        </div>
+        
+        <div class="right-info">
+            <div class="day-info">
+                <div>
+                    <span class="title">PRECIPITACIONES</span>
+                    <span class="value">4 %</span>
+                </div>
+                <div>
+                    <span class="title">HUMEDAD</span>
+                    <span class="value">5 %</span>
+                </div>
+                <div>
+                    <span class="title">VIENTOS</span>
+                    <span class="value">100 km/h</span>
+                </div>
+            </div>
+
+            <ul class="days-list">
+                <li>
+                    <i class='bx bx-cloud' ></i>
+                    <span>Dom</span>
+                    <span class="day-temp">20°C</span>
+                </li>
+                <li>
+                    <i class='bx bx-cloud-drizzle' ></i>
+                    <span>Lun</span>
+                    <span class="day-temp">11°C</span>
+                </li>
+                <li>
+                    <i class='bx bx-cloud-lightning' ></i>
+                    <span>Mar</span>
+                    <span class="day-temp">8°C</span>
+                </li>
+                <li>
+                    <i class='bx bx-cloud-rain' ></i>
+                    <span>Mie</span>
+                    <span class="day-temp">1°C</span>
+                </li>
+            </ul>
+            
+            <div class="btn-container">
+                <button class="loc-button">
+                    Buscar ubicación
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="scripts/index.js"></script>
+</body>
+</html>
