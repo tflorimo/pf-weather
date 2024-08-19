@@ -15,7 +15,6 @@ const domSelect = (selector) => {
  * update every UI element attached to the current day.
  */
 const updateCurrentDayUI = (data) => {
-    const locationButton = domSelect(".loc-button");
     const todayInfo = domSelect(".today-info");
     const todayWeatherIcon = domSelect(".today-weather i");
     const todayTemp = domSelect(".weather-temp");
@@ -32,9 +31,11 @@ const updateCurrentDayUI = (data) => {
     const todayWeatherIconCode = isClearNight ? "moon" : weatherIconMap[currentWeatherCode];
 
     // Update weekday, date, and current location
-    todayInfo.querySelector('h2').textContent = new Date().toLocaleDateString('es-AR', {
+    const today = new Date().toLocaleDateString('es-AR', {
         weekday: 'long'
     });
+    const capitalizedToday = capitalizeFirstLetter(today);
+    todayInfo.querySelector('h2').textContent = capitalizedToday;
     todayInfo.querySelector('span').textContent = new Date().toLocaleDateString('es-AR', {
         day: 'numeric',
         month: 'long',
@@ -163,8 +164,8 @@ const fetchForecast = (location) => {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    fetchCurrentWeatherData("Buenos Aires");
-    fetchForecast("Buenos Aires");
+    // fetchCurrentWeatherData("Buenos Aires");
+    // fetchForecast("Buenos Aires");
 })
 
 /**
