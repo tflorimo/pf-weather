@@ -19,13 +19,14 @@ const updateCurrentDayUI = (data) => {
     const todayInfo = domSelect(".today-info");
     const todayWeatherIcon = domSelect(".today-weather i");
     const todayTemp = domSelect(".weather-temp");
-    const daysList = domSelect(".days-list");
     const locationEl = domSelect('.today-info > div > span');
     const currentWeatherDescription = domSelect(".today-weather h3");
+
     const currentData = data.current;
     const todayWeather = currentData.condition.text;
     const todayTemperature = `${Math.round(currentData.temp_c)}°C`;
     const currentWeatherCode = currentData.condition.code;
+
     // If it isn't daytime and it's Clear, pick the moon as the icon
     const isClearNight = !currentData.is_day && currentWeatherCode == 1000;
     const todayWeatherIconCode = isClearNight ? "moon" : weatherIconMap[currentWeatherCode];
@@ -87,7 +88,36 @@ const updateCurrentDayUI = (data) => {
  * Update UI elements related to forecast.
  */
 const updateForecastUI = (data) => {
-    
+    const daysList = domSelect(".days-list");
+    daysList.innerHTML = "";
+        
+    data.forEach(element => {
+        const forecastWeatherIcon = weatherIconMap[element.day.condition.code];
+        // Date must be created manually since we must avoid timezone issues
+        const [year, month, day] = element.date.split("-");
+        const correctedDate = new Date(year, month-1, day);
+
+        const dayAbbrv = new Date(correctedDate).toLocaleDateString("es-AR", {
+            weekday: "short",
+        });
+
+        const capitalDay = capitalizeFirstLetter(dayAbbrv);
+
+        const dayMonth = new Date(correctedDate).toLocaleDateString("es-AR", {
+            day: "2-digit",
+            month:"2-digit"
+        });
+
+        const averageTemp = Math.round(element.day.avgtemp_c);
+        
+        daysList.innerHTML += `<li>
+            <i class='bx bx-${forecastWeatherIcon}'></i>
+            <span>${capitalDay}</span>
+            <span>${dayMonth}</span>
+            <span class="day-temp">${averageTemp}°C</span>
+        </li>`;
+    });
+
 }
 
 /**
@@ -107,7 +137,6 @@ const fetchCurrentWeatherData = (location) => {
 
 /**
  * Fetches a 5 day forecast from the API.
-
  */
 const fetchForecast = (location) => {
     const apiUrl = `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${location}&lang=es&days=5`;
@@ -118,19 +147,24 @@ const fetchForecast = (location) => {
         /*
         * We need to sanitize the response, in order to ensure that we aren't sending
         * current day's data since it isn't displayed on the right lower side.
+        * 
+        * Also, we don't need the hourly forecast for each day, since it's a lot of data to process.
+        * 
+        * We filter each element of the array, to remove the element with today's date, and we map the array 
+        * to delete the "hour" object.
         */
         const today = getTimeZoneISOString();
-        const validForecast = forecast.filter(item=>item.date !== today);
-        updateForecastUI(data);
+        const validForecast = forecast.filter(item=>item.date !== today).map(({hour, ...rest}) => rest);
+        updateForecastUI(validForecast);
     })
     .catch((error)=>{
-        console.error(`WeatherAPI failed to provide forecast information, responded with code ${response.status}. Error: ${error}`);
+        console.error(`WeatherAPI failed to provide forecast information. Error: ${error}`);
     });
 }
 
-document.addEventListener("DOMContentLoaded", () =>{
-    // fetchCurrentWeatherData("Buenos Aires");
-    // fetchForecast("Buenos Aires");
+document.addEventListener("DOMContentLoaded", () => {
+    fetchCurrentWeatherData("Buenos Aires");
+    fetchForecast("Buenos Aires");
 })
 
 /**
@@ -143,4 +177,13 @@ const getTimeZoneISOString = () => {
     const month = String(today.getMonth() + 1).padStart(2, '0');
     const day = String(today.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`; 
+}
+
+/**
+ * Capitalizes the given string.
+ * Input: "saturday"
+ * Output: "Saturday"
+ */
+const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
