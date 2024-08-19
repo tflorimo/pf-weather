@@ -84,6 +84,13 @@ const updateCurrentDayUI = (data) => {
 }
 
 /**
+ * Update UI elements related to forecast.
+ */
+const updateForecastUI = (data) => {
+    
+}
+
+/**
  * Fetches current day data from the API and sends it to the UI.
  */
 const fetchCurrentWeatherData = (location) => {
@@ -93,28 +100,47 @@ const fetchCurrentWeatherData = (location) => {
     .then(data => {
         updateCurrentDayUI(data);
     })
-    .fail(()=>{
-        console.error(`WeatherAPI failed to provide information for the current day, responded with code ${response.status}`);
+    .catch((error)=>{
+        console.error(`WeatherAPI failed to provide information for the current day, responded with code ${response.status}. Error: ${error}`);
     });
 }
 
 /**
  * Fetches a 5 day forecast from the API.
- * We need to sanitize the response, in order to ensure that we aren't sending
- * current day's data since it isn't displayed on the right side.
+
  */
-const fetchForecast = () => {
-    const apiUrl = `http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${location}&lang=es`;
+const fetchForecast = (location) => {
+    const apiUrl = `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${location}&lang=es&days=5`;
     fetch(apiUrl)
     .then(response=>response.json())
     .then(data => {
-        
+        const forecast=data.forecast.forecastday;
+        /*
+        * We need to sanitize the response, in order to ensure that we aren't sending
+        * current day's data since it isn't displayed on the right lower side.
+        */
+        const today = getTimeZoneISOString();
+        const validForecast = forecast.filter(item=>item.date !== today);
+        updateForecastUI(data);
     })
-    .fail(()=>{
-        console.error(`WeatherAPI failed to provide forecast information, responded with code ${response.status}`);
+    .catch((error)=>{
+        console.error(`WeatherAPI failed to provide forecast information, responded with code ${response.status}. Error: ${error}`);
     });
 }
 
 document.addEventListener("DOMContentLoaded", () =>{
     // fetchCurrentWeatherData("Buenos Aires");
+    // fetchForecast("Buenos Aires");
 })
+
+/**
+ * A reimplementation of Date.prototype.toISOString(),
+ * since it would return UTC and we need to adjust it to local timezone.
+ */
+const getTimeZoneISOString = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`; 
+}
